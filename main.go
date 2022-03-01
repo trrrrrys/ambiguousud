@@ -20,7 +20,6 @@ var verbose bool
 func init() {
 	flag.IntVar(&offset, "offset", 9, "UTC offset (hour)")
 	flag.BoolVar(&verbose, "verbose", false, "verbose")
-	flag.Parse()
 	time.Local = time.FixedZone("", offset*3600)
 	log.SetFlags(log.Lshortfile)
 }
@@ -57,10 +56,10 @@ var patterns = []struct {
 		regexp.MustCompile(`^[0-9]{4}/(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])\s([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$`),
 		"2006/01/02 15:04:05",
 	},
-	{
-		regexp.MustCompile("^[0-9]{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$"),
-		"20060102",
-	},
+	// {
+	// 	regexp.MustCompile("^[0-9]{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$"),
+	// 	"20060102",
+	// },
 	{
 		regexp.MustCompile("^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"),
 		"2006-01-02",
@@ -72,6 +71,7 @@ var patterns = []struct {
 }
 
 func run() error {
+	flag.Parse()
 	var arg string
 	if verbose {
 		log.Println(os.Args)

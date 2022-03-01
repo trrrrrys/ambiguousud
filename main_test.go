@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"reflect"
 	"testing"
 
 	a "github.com/trrrrrys/ambiguousud"
@@ -10,22 +11,27 @@ func TestAmbiguousConvert(t *testing.T) {
 	var tests = []struct {
 		name   string
 		in     string
-		expect interface{}
+		expect any
 	}{
 		{
 			"yyyymmdd hh:mm:ss to unixtimestamp",
 			"20200101 00:00:00",
-			1577804400,
+			int64(1577804400),
 		},
 		{
-			"yyyymmdd hh:mm:ss to unixtimestamp",
-			"20200101 00:00:00",
-			1577804400,
+			"yyyy/mm/dd hh:mm:ss to unixtimestamp",
+			"2020/01/01 00:00:00",
+			int64(1577804400),
 		},
 		{
-			"yyyymmdd hh:mm:ss to unixtimestamp",
-			"20200101 00:00:00",
-			1577804400,
+			"yyyy-mm-dd hh:mm:ss to unixtimestamp",
+			"2020-01-01 00:00:00",
+			int64(1577804400),
+		},
+		{
+			"ut to yyyy-mm-dd hh:mm:ss",
+			"1577804400",
+			"2020-01-01 00:00:00",
 		},
 	}
 	for _, tt := range tests {
@@ -37,6 +43,8 @@ func TestAmbiguousConvert(t *testing.T) {
 				t.Fatalf("error: %+v", err)
 			}
 			if got != tt.expect {
+				t.Log("expect: ", reflect.TypeOf(tt.expect))
+				t.Log("got: ", reflect.TypeOf(got))
 				t.Errorf("expect: %v, got: %v", tt.expect, got)
 			}
 		})
