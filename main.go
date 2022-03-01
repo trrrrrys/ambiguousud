@@ -76,10 +76,13 @@ func run() error {
 	if verbose {
 		log.Println(os.Args)
 	}
-	if len(os.Args) > 2 {
+	if n := len(os.Args); n > 2 {
 		arg = strings.Join(os.Args[1:], " ")
-	} else {
+	} else if n == 2 {
 		arg = os.Args[1]
+	} else {
+		flag.Usage()
+		return nil
 	}
 	result, err := AmbiguousConvert(arg)
 	if err != nil {
@@ -90,7 +93,7 @@ func run() error {
 }
 
 // AmbiguousConvert converts unixtime and datetime to each other
-func AmbiguousConvert(s string) (interface{}, error) {
+func AmbiguousConvert(s string) (any, error) {
 	if i, err := strconv.Atoi(s); err == nil {
 		return time.Unix(int64(i), 0).Local().Format(f5), nil
 	}
